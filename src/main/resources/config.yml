@@ -1,0 +1,17 @@
+duration: 200
+items:
+  money:
+    material: gold_ingot
+    display_name: "&eGold Ingot"
+    lore:
+      - "&6Receive some money!"
+    pickup_commands:
+      - "eco give %player% 20"
+  colored_helmet:
+    material: leather_helmet
+    display_name: "&cRed Helmet"
+    lore:
+      - "&4A red helmet"
+    color: red
+    enchantments:
+      thorns: 2

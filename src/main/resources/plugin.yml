@@ -1,0 +1,15 @@
+name: "AngelicDrop"
+version: "1.0.0"
+main: "me.tylergrissom.angelicdrop.AngelicDropPlugin"
+
+description: "Provides drop parties"
+authors: ["Tyler Grissom"]
+website: "https://tyler-g.net"
+
+depend: ["WorldEdit"]
+
+commands:
+  angelicdrop:
+    description: "AngelicDrop command."
+    usage: "/<command> <sub> [args]"
+    aliases: ["ad", "angelicdrops"]
