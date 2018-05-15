@@ -147,15 +147,9 @@ public class AngelicDropController {
             is.addUnsafeEnchantments(enchantments);
         }
 
-        System.out.println(section);
-
         if (section.get("color") != null) {
-            System.out.println("1");
-            
             if (material == Material.LEATHER_HELMET || material == Material.LEATHER_CHESTPLATE || material == Material.LEATHER_LEGGINGS || material == Material.LEATHER_BOOTS) {
                 String[] split = section.getString("color").split(",");
-                
-                System.out.println("2");
 
                 try {
                     int r = Integer.parseInt(split[0]);
@@ -167,8 +161,6 @@ public class AngelicDropController {
                     leatherMeta.setColor(Color.fromRGB(r, g, b));
 
                     is.setItemMeta(leatherMeta);
-                    
-                    System.out.println("3");
                 } catch (NumberFormatException ignored) {
                     Bukkit.getLogger().log(Level.WARNING, "Invalid RGB color format (Ex. '255,0,0' for red)");
                 }
