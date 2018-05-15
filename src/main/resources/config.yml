@@ -12,6 +12,6 @@ items:
     display_name: "&cRed Helmet"
     lore:
       - "&4A red helmet"
-    color: red
+    color: "255,0,0"
     enchantments:
       thorns: 2

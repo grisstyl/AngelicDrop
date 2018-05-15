@@ -2,6 +2,8 @@ package me.tylergrissom.angelicdrop;
 
 import lombok.Getter;
 import me.tylergrissom.angelicdrop.command.AngelicDropCommand;
+import me.tylergrissom.angelicdrop.listener.InteractListener;
+import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,6 +24,8 @@ public class AngelicDropPlugin extends JavaPlugin {
         controller = new AngelicDropController(this);
 
         getCommand("angelicdrop").setExecutor(new AngelicDropCommand(this));
+
+        Bukkit.getPluginManager().registerEvents(new InteractListener(this), this);
     }
 
     @Override
