@@ -13,5 +13,8 @@ items:
     lore:
       - "&4A red helmet"
     color: "255,0,0"
+    flags:
+      - hide_attributes
+      - hide_enchants
     enchantments:
       thorns: 2

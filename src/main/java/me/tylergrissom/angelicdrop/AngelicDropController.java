@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -134,6 +135,16 @@ public class AngelicDropController {
         }
 
         meta.setUnbreakable(unbreakable);
+
+        if (section.get("flags") != null) {
+            Set<ItemFlag> flags = new HashSet<>();
+
+            for (String flag : section.getStringList("flags")) {
+                flags.add(ItemFlag.valueOf(flag.toUpperCase()));
+            }
+
+            meta.addItemFlags((ItemFlag[]) flags.toArray(new ItemFlag[]{}));
+        }
 
         is.setItemMeta(meta);
 
