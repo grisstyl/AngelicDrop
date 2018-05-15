@@ -1,5 +1,6 @@
 package me.tylergrissom.angelicdrop.command;
 
+import com.sk89q.worldedit.bukkit.selections.Selection;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import me.tylergrissom.angelicdrop.AngelicDropController;
@@ -8,7 +9,6 @@ import me.tylergrissom.angelicdrop.config.MessagesYaml;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * Copyright Tyler Grissom 2018
@@ -34,10 +34,15 @@ public class AngelicDropCommand extends CommandBase {
                 if (sub.equalsIgnoreCase("start")) {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
+                        Selection selection = controller.getWorldEditIntegration().getSelection(p);
 
-                        for (ItemStack is : controller.getDropItems()) {
-                            p.getInventory().addItem(is);
+                        if (selection != null) {
+                            controller.startDropParty(p, selection);
+                        } else {
+                            p.sendMessage(messages.getMessage("error.make_selection"));
                         }
+                    } else {
+                        sender.sendMessage(messages.getMessage("error.only_players"));
                     }
                 } else if (sub.equalsIgnoreCase("reload")) {
                     try {

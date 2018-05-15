@@ -1,8 +1,10 @@
 package me.tylergrissom.angelicdrop;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.bukkit.selections.Selection;
 import lombok.Getter;
 import me.tylergrissom.angelicdrop.config.MessagesYaml;
+import me.tylergrissom.angelicdrop.task.DropPartyTask;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -10,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -82,6 +85,10 @@ public class AngelicDropController {
         } finally {
             logger.log(Level.INFO, "Reloaded plugin");
         }
+    }
+
+    public long getDuration() {
+        return getConfig().getLong("duration");
     }
 
     public ConfigurationSection getDropItemsSection() {
@@ -179,5 +186,24 @@ public class AngelicDropController {
         }
 
         return is;
+    }
+
+    public void startDropParty(Player player, Selection selection) {
+        Bukkit.getLogger().log(Level.INFO, player.getName() + " has started a drop party at " + selection);
+
+        Map<String, String> replace = new HashMap<>();
+
+        replace.put("player", player.getDisplayName());
+        replace.put("location", (int) player.getLocation().getX() + " " + (int) player.getLocation().getY() + " " + (int) player.getLocation().getZ());
+
+        Bukkit.broadcastMessage(getMessages().getMessage("command.party_started", replace));
+
+        int id = Bukkit.getScheduler().scheduleSyncRepeatingTask(getPlugin(), new DropPartyTask(getPlugin(), selection), 0, 20);
+
+        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
+            Bukkit.getScheduler().cancelTask(id);
+
+            Bukkit.broadcastMessage(getMessages().getMessage("command.party_ended"));
+        }, getDuration());
     }
 }

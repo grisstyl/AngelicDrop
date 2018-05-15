@@ -13,3 +13,8 @@ commands:
     description: "AngelicDrop command."
     usage: "/<command> <sub> [args]"
     aliases: ["ad", "angelicdrops"]
+
+permissions:
+  angelicdrop.admin:
+    description: "Administrate the plugin features and start drop parties"
+    default: "op"
