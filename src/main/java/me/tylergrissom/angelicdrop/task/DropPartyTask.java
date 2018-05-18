@@ -25,7 +25,7 @@ public class DropPartyTask extends BukkitRunnable {
     @Getter
     private Selection selection;
 
-    public Location getRandomLocation(Location min, Location max) {
+    private Location getRandomLocation(Location min, Location max) {
         Preconditions.checkArgument(min.getWorld() == max.getWorld());
         
         double minX = Math.min(min.getX(), max.getX());
@@ -45,10 +45,10 @@ public class DropPartyTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        AngelicDropController controller = getPlugin().getController();
-        Location loc = getRandomLocation(selection.getMinimumPoint(), selection.getMaximumPoint());
-        ItemStack is = new ArrayList<>(controller.getDropItems()).get(ThreadLocalRandom.current().nextInt(controller.getDropItems().size()));
+        if (getSelection().getWorld() == null) {
+            return;
+        }
 
-        loc.getWorld().dropItem(loc, is);
+        getSelection().getWorld().dropItem(getRandomLocation(getSelection().getMinimumPoint(), getSelection().getMaximumPoint()), getPlugin().getController().getRandomItem());
     }
 }

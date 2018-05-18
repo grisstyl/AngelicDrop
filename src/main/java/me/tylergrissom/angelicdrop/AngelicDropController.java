@@ -22,6 +22,7 @@ import org.bukkit.plugin.PluginManager;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -104,6 +105,12 @@ public class AngelicDropController {
         }
 
         return items;
+    }
+
+    public ItemStack getRandomItem() {
+        List<String> keys = new ArrayList<>(getDropItemsSection().getKeys(false));
+
+        return createDropItem(getDropItemsSection().getConfigurationSection(keys.get(ThreadLocalRandom.current().nextInt(keys.size()))));
     }
 
     public ItemStack createDropItem(String key) {
