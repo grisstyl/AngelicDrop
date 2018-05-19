@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.Permission;
 
 import java.util.HashSet;
 import java.util.List;
@@ -33,8 +34,15 @@ public class InteractListener implements Listener {
 
     @EventHandler
     public void onInteract(final PlayerInteractEvent event) {
-        AngelicDropController controller = getPlugin().getController();
         Player p = event.getPlayer();
+        AngelicDropController controller = getPlugin().getController();
+
+        if (!p.hasPermission(new Permission("angelicdrop.interact"))) {
+            event.setCancelled(true);
+
+            return;
+        }
+
         ItemStack item = event.getItem();
 
         Pair<ItemStack, ConfigurationSection> pair = controller.getDropItem(item);

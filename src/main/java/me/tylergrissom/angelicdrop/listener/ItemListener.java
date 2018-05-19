@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.Permission;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,6 +30,13 @@ public class ItemListener implements Listener {
         if (event.getEntity() instanceof Player) {
             AngelicDropController controller = getPlugin().getController();
             Player p = (Player) event.getEntity();
+
+            if (!p.hasPermission(new Permission("angelicdrop.pickup"))) {
+                p.sendMessage(controller.getMessages().getMessage("error.no_permission"));
+
+                return;
+            }
+
             ItemStack item = event.getItem().getItemStack();
 
             Pair<ItemStack, ConfigurationSection> pair = controller.getDropItem(item);

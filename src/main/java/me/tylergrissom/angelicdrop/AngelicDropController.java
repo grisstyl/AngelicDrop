@@ -19,12 +19,14 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -205,14 +207,22 @@ public class AngelicDropController {
         replace.put("player", player.getDisplayName());
         replace.put("location", (int) player.getLocation().getX() + " " + (int) player.getLocation().getY() + " " + (int) player.getLocation().getZ());
 
-        Bukkit.broadcastMessage(getMessages().getMessage("command.party_started", replace));
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            if (p.hasPermission(new Permission("angelicdrop.notify"))) {
+                p.sendMessage(getMessages().getMessage("command.party_started", replace));
+            }
+        });
 
         int id = Bukkit.getScheduler().scheduleSyncRepeatingTask(getPlugin(), new DropPartyTask(getPlugin(), selection), 0, 20);
 
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
             Bukkit.getScheduler().cancelTask(id);
 
-            Bukkit.broadcastMessage(getMessages().getMessage("command.party_ended"));
+            Bukkit.getOnlinePlayers().forEach(p -> {
+                if (p.hasPermission(new Permission("angelicdrop.notify"))) {
+                    p.sendMessage(getMessages().getMessage("command.party_ended", replace));
+                }
+            });
         }, getDuration());
     }
 

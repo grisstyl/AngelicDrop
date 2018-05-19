@@ -14,3 +14,4 @@ Commission for Discord user Guayabas#9386
 * Specify a drop duration with `/angelicdrop start`
 * Messaging option
 * Chances on item drops
+* Party delays
