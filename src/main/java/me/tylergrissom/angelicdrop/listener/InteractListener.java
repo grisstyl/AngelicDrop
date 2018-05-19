@@ -9,7 +9,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -31,7 +30,7 @@ public class InteractListener implements Listener {
         return ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', str));
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler
     public void onInteract(final PlayerInteractEvent event) {
         Player p = event.getPlayer();
         AngelicDropController controller = getPlugin().getController();
@@ -53,7 +52,7 @@ public class InteractListener implements Listener {
         if (pair != null) {
             ConfigurationSection section = pair.getValue();
 
-            if (section.getStringList("interact_commands") == null) {
+            if (section.get("interact_commands") == null || section.get("pickup_commands") != null) {
                 return;
             }
 
