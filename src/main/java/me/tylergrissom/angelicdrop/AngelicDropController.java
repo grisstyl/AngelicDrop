@@ -5,8 +5,8 @@ import com.sk89q.worldedit.bukkit.selections.Selection;
 import lombok.Getter;
 import me.tylergrissom.angelicdrop.config.MessagesYaml;
 import me.tylergrissom.angelicdrop.task.DropPartyTask;
+import me.tylergrissom.angelicdrop.utility.ColorUtility;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -133,7 +133,7 @@ public class AngelicDropController {
             throw new IllegalArgumentException("All items must have a display_name attribute");
         }
 
-        String name = ChatColor.translateAlternateColorCodes('&', section.getString("display_name"));
+        String name = ColorUtility.translate(section.getString("display_name"));
 
         meta.setDisplayName(name);
 
@@ -142,7 +142,7 @@ public class AngelicDropController {
             List<String> lore = new ArrayList<>();
 
             for (String str : originalLore) {
-                lore.add(ChatColor.translateAlternateColorCodes('&', str));
+                lore.add(ColorUtility.translate(str));
             }
 
             meta.setLore(lore);
