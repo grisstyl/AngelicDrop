@@ -2,11 +2,13 @@ package me.tylergrissom.angelicdrop;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
+import javafx.util.Pair;
 import lombok.Getter;
 import me.tylergrissom.angelicdrop.config.MessagesYaml;
 import me.tylergrissom.angelicdrop.task.DropPartyTask;
 import me.tylergrissom.angelicdrop.utility.ColorUtility;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -212,5 +214,33 @@ public class AngelicDropController {
 
             Bukkit.broadcastMessage(getMessages().getMessage("command.party_ended"));
         }, getDuration());
+    }
+
+    public Pair<ItemStack, ConfigurationSection> getDropItem(ItemStack item) {
+        if (item == null || item.getItemMeta() == null || item.getItemMeta().getDisplayName() == null) {
+            return null;
+        }
+
+        ConfigurationSection section = getPlugin().getConfig().getConfigurationSection("items");
+
+        for (String key : section.getKeys(false)) {
+            ConfigurationSection subSection = section.getConfigurationSection(key);
+
+            if (item.getItemMeta().getDisplayName().equals(ColorUtility.translate(subSection.getString("display_name")))) {
+                return new Pair<>(createDropItem(subSection), subSection);
+            }
+        }
+
+        return null;
+    }
+
+    public void dispatchCommands(Set<String> commands, Player player) {
+        commands.forEach(command -> {
+            if (player != null) {
+                command = command.replaceAll("%player%", player.getName());
+            }
+
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        });
     }
 }

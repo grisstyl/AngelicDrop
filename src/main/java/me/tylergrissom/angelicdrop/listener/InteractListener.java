@@ -1,7 +1,9 @@
 package me.tylergrissom.angelicdrop.listener;
 
+import javafx.util.Pair;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import me.tylergrissom.angelicdrop.AngelicDropController;
 import me.tylergrissom.angelicdrop.AngelicDropPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,7 +14,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright Tyler Grissom 2018
@@ -29,34 +33,25 @@ public class InteractListener implements Listener {
 
     @EventHandler
     public void onInteract(final PlayerInteractEvent event) {
+        AngelicDropController controller = getPlugin().getController();
         Player p = event.getPlayer();
         ItemStack item = event.getItem();
 
-        if (item == null || item.getItemMeta() == null || item.getItemMeta().getDisplayName() == null) {
-            return;
-        }
+        Pair<ItemStack, ConfigurationSection> pair = controller.getDropItem(item);
 
-        ConfigurationSection section = getPlugin().getConfig().getConfigurationSection("items");
+        if (pair != null) {
+            ConfigurationSection section = pair.getValue();
 
-        for (String key : section.getKeys(false)) {
-            ConfigurationSection subSection = section.getConfigurationSection(key);
+            event.setCancelled(true);
 
-            if (item.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', subSection.getString("display_name"))) && subSection.get("pickup_commands") != null) {
-                event.setCancelled(true);
+            Set<String> commands = new HashSet<>(section.getStringList("interact_commands"));
 
-                List<String> commands = subSection.getStringList("pickup_commands");
+            for (int i = 0; i < item.getAmount(); i++) {
+                controller.dispatchCommands(commands, p);
+            }
 
-                for (int i = 0; i < item.getAmount(); i++) {
-                    for (String cmd : commands) {
-                        cmd = cmd.replace("%player%", p.getName());
-
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
-                    }
-                }
-
+            if (section.getBoolean("remove", true)) {
                 p.getInventory().remove(item);
-
-                break;
             }
         }
     }
