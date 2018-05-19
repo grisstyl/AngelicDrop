@@ -16,10 +16,30 @@ commands:
 
 permissions:
   angelicdrop.*:
+    description: "Superpermission for AngelicDrop."
     children:
       angelicdrop.admin: "true"
+      angelicdrop.user: "true"
+
+  angelicdrop.user:
+    description: "All user-facing permissions."
+    children:
+      angelicdrop.pickup: "true"
+      angelicdrop.interact: "true"
+      angelicdrop.notify: "true"
+  angelicdrop.pickup:
+    description: "Pick up drop party items."
+  angelicdrop.interact:
+    description: "Interact with drop party items."
+  angelicdrop.notify:
+    description: "Be notified when a drop party starts or ends."
+
   angelicdrop.admin:
-    description: "Administrate the plugin features and start drop parties"
+    description: "All admin-facing permissions."
     children:
       angelicdrop.start: "true"
       angelicdrop.reload: "true"
+  angelicdrop.start:
+    description: "Start a drop party."
+  angelicdrop.reload:
+    description: "Reload AngelicDrop."
