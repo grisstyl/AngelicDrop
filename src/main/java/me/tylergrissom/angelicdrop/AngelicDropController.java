@@ -225,7 +225,7 @@ public class AngelicDropController {
         return null;
     }
 
-    public void dispatchCommands(Set<String> commands, Player player) {
+    public void dispatchCommands(Collection<String> commands, Player player) {
         commands.forEach(command -> {
             if (player != null) {
                 command = command.replaceAll("%player%", player.getName());

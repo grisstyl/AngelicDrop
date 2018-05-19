@@ -59,6 +59,24 @@ public class MessagesYaml {
         return messages;
     }
 
+    public FileConfiguration getDefaults() {
+        Reader defStream = null;
+
+        try {
+            defStream = new InputStreamReader(getPlugin().getResource("messages.yml"), "UTF8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        if (defStream == null) {
+            Bukkit.getLogger().log(Level.SEVERE, "Failed to retrieve default messages.yml");
+
+            return null;
+        }
+
+        return YamlConfiguration.loadConfiguration(defStream);
+    }
+
     public void save() {
         if (messages == null || messagesFile == null) return;
 
@@ -80,7 +98,19 @@ public class MessagesYaml {
     }
 
     public String getMessage(String entry) {
-        return ChatColor.translateAlternateColorCodes('&', get().getString(entry));
+        if (entry == null || get().get(entry) == null) {
+            return null;
+        }
+
+        String msg = get().getString(entry);
+
+        if (msg == null) {
+            FileConfiguration def = getDefaults();
+
+            msg = ChatColor.translateAlternateColorCodes('&', def.getString(entry));
+        }
+
+        return ChatColor.translateAlternateColorCodes('&', msg);
     }
 
     public String getMessage(String entry, Map<String, String> replacements) {
@@ -94,7 +124,15 @@ public class MessagesYaml {
     }
 
     public String[] getMessages(String entry) {
-        List<String> messages = get().getStringList(entry);
+        List<String> messages;
+
+        if (get().get(entry) == null) {
+            FileConfiguration def = getDefaults();
+
+            messages = def.getStringList(entry);
+        } else {
+            messages = get().getStringList(entry);
+        }
 
         for (int i = 0; i < messages.size(); i++) {
             messages.set(i, ChatColor.translateAlternateColorCodes('&', messages.get(i)));
@@ -104,18 +142,18 @@ public class MessagesYaml {
     }
 
     public String[] getMessages(String entry, Map<String, String> replacements) {
-        List<String> messages = getMessages().getStringList(entry);
+        String[] messages = getMessages(entry);
 
-        for (int i = 0; i < messages.size(); i++) {
-            String str = ChatColor.translateAlternateColorCodes('&', messages.get(i));
+        for (int i = 0; i < messages.length; i++) {
+            String str = ChatColor.translateAlternateColorCodes('&', messages[i]);
 
             for (Map.Entry<String, String> replace : replacements.entrySet()) {
                 str = str.replace("%" + replace.getKey() + "%", replace.getValue());
             }
 
-            messages.set(i, str);
+            messages[i] = str;
         }
 
-        return messages.toArray(new String[messages.size()]);
+        return messages;
     }
 }

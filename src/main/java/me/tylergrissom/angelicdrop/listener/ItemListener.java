@@ -12,9 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Copyright (c) 2013-2018 Tyler Grissom
@@ -47,13 +45,8 @@ public class ItemListener implements Listener {
         }
 
         List<String> commands = section.getStringList("pickup_commands");
-        Set<String> newCommands = new HashSet<>();
 
-        for (String command : commands) {
-            newCommands.add(command.replaceAll("%player%", p.getName()));
-        }
-
-        newCommands.forEach(System.out::println);
+        controller.dispatchCommands(commands, p);
 
         event.setCancelled(true);
         event.getItem().remove();

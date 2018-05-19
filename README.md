@@ -20,4 +20,3 @@ This plugin provides drop parties through a WorldEdit selection.
 * Move cancellation to CancelDropPartyTask
 * Make DropPartyTask use DropParty object
 * Tab completer
-* Figure out why messages.yml does not generate on first load
