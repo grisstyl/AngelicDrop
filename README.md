@@ -8,10 +8,11 @@ Commission for Discord user Guayabas#9386
 
 ## Ideas
 
-* Drop sounds
-* Party statuses for starting and stopping them
+* Party and drop sounds
+* Stopping parties and option for limiting amount of parties (max and per-user)
 * Infinite drop paries
 * Specify a drop duration with `/angelicdrop start`
 * Messaging option
 * Chances on item drops
 * Party delays
+* Period between drops

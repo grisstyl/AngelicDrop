@@ -8,7 +8,6 @@ import me.tylergrissom.angelicdrop.config.MessagesYaml;
 import me.tylergrissom.angelicdrop.task.DropPartyTask;
 import me.tylergrissom.angelicdrop.utility.ColorUtility;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -22,6 +21,8 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
 import java.util.*;
@@ -47,6 +48,9 @@ public class AngelicDropController {
     @Getter
     private WorldEditPlugin worldEditIntegration;
 
+    @Getter
+    private List<DropParty> activeDropParties;
+
     AngelicDropController(AngelicDropPlugin plugin) {
         this.plugin = plugin;
 
@@ -56,6 +60,7 @@ public class AngelicDropController {
 
         this.config = getPlugin().getConfig();
         this.messages = new MessagesYaml(plugin);
+        this.activeDropParties = new ArrayList<>();
 
         messages.saveDefaults();
 
@@ -71,6 +76,23 @@ public class AngelicDropController {
 
             pm.disablePlugin(getPlugin());
         }
+
+        BukkitScheduler scheduler = Bukkit.getScheduler();
+
+        scheduler.scheduleSyncRepeatingTask(getPlugin(), new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (getActiveDropParties() == null || getActiveDropParties().size() <= 0) {
+                    return;
+                }
+
+                getActiveDropParties().forEach(dropParty -> {
+                    if (!scheduler.isCurrentlyRunning(dropParty.getTaskId())) {
+                        getActiveDropParties().remove(dropParty);
+                    }
+                });
+            }
+        }, 0, 5);
     }
 
     public void reloadPlugin() throws Throwable {
@@ -200,30 +222,11 @@ public class AngelicDropController {
     }
 
     public void startDropParty(Player player, Selection selection) {
-        Bukkit.getLogger().log(Level.INFO, player.getName() + " has started a drop party at " + selection);
+        DropParty party = new DropParty(this, player, selection);
 
-        Map<String, String> replace = new HashMap<>();
+        getActiveDropParties().add(party);
 
-        replace.put("player", player.getDisplayName());
-        replace.put("location", (int) player.getLocation().getX() + " " + (int) player.getLocation().getY() + " " + (int) player.getLocation().getZ());
-
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            if (p.hasPermission(new Permission("angelicdrop.notify"))) {
-                p.sendMessage(getMessages().getMessage("command.party_started", replace));
-            }
-        });
-
-        int id = Bukkit.getScheduler().scheduleSyncRepeatingTask(getPlugin(), new DropPartyTask(getPlugin(), selection), 0, 20);
-
-        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
-            Bukkit.getScheduler().cancelTask(id);
-
-            Bukkit.getOnlinePlayers().forEach(p -> {
-                if (p.hasPermission(new Permission("angelicdrop.notify"))) {
-                    p.sendMessage(getMessages().getMessage("command.party_ended", replace));
-                }
-            });
-        }, getDuration());
+        party.start();
     }
 
     public Pair<ItemStack, ConfigurationSection> getDropItem(ItemStack item) {
