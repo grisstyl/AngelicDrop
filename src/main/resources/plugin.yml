@@ -15,6 +15,11 @@ commands:
     aliases: ["ad", "angelicdrops"]
 
 permissions:
+  angelicdrop.*:
+    children:
+      angelicdrop.admin: "true"
   angelicdrop.admin:
     description: "Administrate the plugin features and start drop parties"
-    default: "op"
+    children:
+      angelicdrop.start: "true"
+      angelicdrop.reload: "true"
