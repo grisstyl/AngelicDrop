@@ -5,18 +5,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import me.tylergrissom.angelicdrop.AngelicDropController;
 import me.tylergrissom.angelicdrop.AngelicDropPlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permission;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -32,7 +31,7 @@ public class InteractListener implements Listener {
         return ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', str));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onInteract(final PlayerInteractEvent event) {
         Player p = event.getPlayer();
         AngelicDropController controller = getPlugin().getController();
@@ -43,12 +42,20 @@ public class InteractListener implements Listener {
             return;
         }
 
+        if (event.isCancelled()) {
+            return;
+        }
+
         ItemStack item = event.getItem();
 
         Pair<ItemStack, ConfigurationSection> pair = controller.getDropItem(item);
 
         if (pair != null) {
             ConfigurationSection section = pair.getValue();
+
+            if (section.getStringList("interact_commands") == null) {
+                return;
+            }
 
             event.setCancelled(true);
 

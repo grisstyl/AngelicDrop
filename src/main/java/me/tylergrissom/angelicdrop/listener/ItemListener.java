@@ -8,10 +8,10 @@ import me.tylergrissom.angelicdrop.AngelicDropPlugin;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permission;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,36 +25,33 @@ public class ItemListener implements Listener {
     @Getter
     private AngelicDropPlugin plugin;
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPickup(final EntityPickupItemEvent event) {
-        if (event.getEntity() instanceof Player) {
-            AngelicDropController controller = getPlugin().getController();
-            Player p = (Player) event.getEntity();
+        if (event.isCancelled() || !(event.getEntity() instanceof Player)) {
+            return;
+        }
 
-            if (!p.hasPermission(new Permission("angelicdrop.pickup"))) {
-                p.sendMessage(controller.getMessages().getMessage("error.no_permission"));
+        AngelicDropController controller = getPlugin().getController();
+        Player p = (Player) event.getEntity();
+        ItemStack item = event.getItem().getItemStack();
 
+        Pair<ItemStack, ConfigurationSection> pair = controller.getDropItem(item);
+
+        if (pair != null) {
+            ConfigurationSection section = pair.getValue();
+
+            if (section.getStringList("pickup_commands") == null) {
                 return;
             }
 
-            ItemStack item = event.getItem().getItemStack();
+            Set<String> commands = new HashSet<>(section.getStringList("pickup_commands"));
 
-            Pair<ItemStack, ConfigurationSection> pair = controller.getDropItem(item);
+            for (int i = 0; i < item.getAmount(); i++) {
+                controller.dispatchCommands(commands, p);
+            }
 
-            if (pair != null) {
-                ConfigurationSection section = pair.getValue();
-
-                event.setCancelled(true);
-
-                Set<String> commands = new HashSet<>(section.getStringList("pickup_commands"));
-
-                for (int i = 0; i < item.getAmount(); i++) {
-                    controller.dispatchCommands(commands, p);
-                }
-
-                if (section.getBoolean("remove", true)) {
-                    p.getInventory().remove(item);
-                }
+            if (section.getBoolean("remove", true)) {
+                p.getInventory().remove(item);
             }
         }
     }

@@ -2,8 +2,6 @@
 
 This plugin provides drop parties through a WorldEdit selection.
 
-Commission for Discord user Guayabas#9386
-
 [![Build Status](https://travis-ci.com/grisstyl/AngelicDrop.svg?branch=master)](https://travis-ci.com/grisstyl/AngelicDrop)
 
 ## Ideas
@@ -16,3 +14,9 @@ Commission for Discord user Guayabas#9386
 * Chances on item drops
 * Party delays
 * Period between drops
+* Timed clearing of remaining items
+* WorldEdit integration optional
+* Convert to use NBT data for everything instead of messy display name lookup
+* Move cancellation to CancelDropPartyTask
+* Make DropPartyTask use DropParty object
+* Tab completer

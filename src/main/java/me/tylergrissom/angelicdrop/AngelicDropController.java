@@ -5,7 +5,6 @@ import com.sk89q.worldedit.bukkit.selections.Selection;
 import javafx.util.Pair;
 import lombok.Getter;
 import me.tylergrissom.angelicdrop.config.MessagesYaml;
-import me.tylergrissom.angelicdrop.task.DropPartyTask;
 import me.tylergrissom.angelicdrop.utility.ColorUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -18,16 +17,12 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -76,23 +71,6 @@ public class AngelicDropController {
 
             pm.disablePlugin(getPlugin());
         }
-
-        BukkitScheduler scheduler = Bukkit.getScheduler();
-
-        scheduler.scheduleSyncRepeatingTask(getPlugin(), new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (getActiveDropParties() == null || getActiveDropParties().size() <= 0) {
-                    return;
-                }
-
-                getActiveDropParties().forEach(dropParty -> {
-                    if (!scheduler.isCurrentlyRunning(dropParty.getTaskId())) {
-                        getActiveDropParties().remove(dropParty);
-                    }
-                });
-            }
-        }, 0, 5);
     }
 
     public void reloadPlugin() throws Throwable {
@@ -147,7 +125,7 @@ public class AngelicDropController {
         Material material = Material.valueOf(section.getString("material").toUpperCase());
         int amount = section.getInt("amount", 1);
         byte data = (byte) section.getInt("data", 0);
-        short damage = (short) section.getInt("durbility", 0);
+        short damage = (short) section.getInt("durability", 0);
         boolean unbreakable = section.getBoolean("unbreakable", false);
 
         ItemStack is = new ItemStack(material, amount, damage, data);

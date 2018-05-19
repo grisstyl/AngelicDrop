@@ -5,7 +5,6 @@ items:
     display_name: "&eGold Ingot"
     lore:
       - "&6Receive some money!"
-    remove: true
     interact_commands:
       - "eco give %player% 20"
   alt_money:

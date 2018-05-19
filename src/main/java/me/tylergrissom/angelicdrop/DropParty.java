@@ -56,6 +56,12 @@ public class DropParty {
         Bukkit.getScheduler().runTaskLater(controller.getPlugin(), () -> {
             Bukkit.getScheduler().cancelTask(taskId);
 
+            for (DropParty dropParty : getController().getActiveDropParties()) {
+                if (dropParty.getTaskId() == taskId) {
+                    getController().getActiveDropParties().remove(dropParty);
+                }
+            }
+
             Bukkit.getOnlinePlayers().forEach(p -> {
                 if (p.hasPermission(new Permission("angelicdrop.notify"))) {
                     p.sendMessage(messages.getMessage("command.party_ended", replace));
