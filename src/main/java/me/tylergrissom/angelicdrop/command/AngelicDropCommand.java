@@ -11,6 +11,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Copyright Tyler Grissom 2018
  */
@@ -70,5 +73,10 @@ public class AngelicDropCommand extends CommandBase {
                 sender.sendMessage(usage);
             }
         }
+    }
+
+    @Override
+    public List<String> tab(CommandSender sender, Command command, String[] args) {
+        return Arrays.asList("start", "reload");
     }
 }

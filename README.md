@@ -18,5 +18,3 @@ This plugin provides drop parties through a WorldEdit selection.
 * WorldEdit integration optional
 * Convert to use NBT data for everything instead of messy display name lookup
 * Move cancellation to CancelDropPartyTask
-* Make DropPartyTask use DropParty object
-* Tab completer
