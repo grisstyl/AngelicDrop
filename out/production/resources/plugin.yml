@@ -1,0 +1,49 @@
+name: "AngelicDrop"
+version: "1.0.0"
+main: "me.tylergrissom.angelicdrop.AngelicDropPlugin"
+
+description: "Provides drop parties"
+authors: ["Tyler Grissom"]
+website: "https://tyler-g.net"
+
+depend: ["WorldEdit"]
+
+commands:
+  angelicdrop:
+    description: "AngelicDrop command."
+    usage: "/<command> <sub> [args]"
+    aliases: ["ad", "angelicdrops"]
+
+permissions:
+  angelicdrop.*:
+    description: "Superpermission for AngelicDrop."
+    default: op
+    children:
+      angelicdrop.admin: true
+      angelicdrop.user: true
+
+  angelicdrop.user:
+    description: "All user-facing permissions."
+    default: true
+    children:
+      angelicdrop.interact: true
+      angelicdrop.notify: true
+  angelicdrop.interact:
+    description: "Interact with drop party items."
+    default: true
+  angelicdrop.notify:
+    description: "Be notified when a drop party starts or ends."
+    default: true
+
+  angelicdrop.admin:
+    description: "All admin-facing permissions."
+    default: op
+    children:
+      angelicdrop.start: true
+      angelicdrop.reload: true
+  angelicdrop.start:
+    description: "Start a drop party."
+    default: op
+  angelicdrop.reload:
+    description: "Reload AngelicDrop."
+    default: op

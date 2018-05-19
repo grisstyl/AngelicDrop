@@ -4,13 +4,10 @@ import com.google.common.base.Preconditions;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import me.tylergrissom.angelicdrop.AngelicDropController;
-import me.tylergrissom.angelicdrop.AngelicDropPlugin;
+import me.tylergrissom.angelicdrop.DropParty;
 import org.bukkit.Location;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -20,10 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class DropPartyTask extends BukkitRunnable {
 
     @Getter
-    private AngelicDropPlugin plugin;
-
-    @Getter
-    private Selection selection;
+    private DropParty dropParty;
 
     private Location getRandomLocation(Location min, Location max) {
         Preconditions.checkArgument(min.getWorld() == max.getWorld());
@@ -45,10 +39,12 @@ public class DropPartyTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (getSelection().getWorld() == null) {
+        Selection selection = getDropParty().getSelection();
+
+        if (selection.getWorld() == null) {
             return;
         }
 
-        getSelection().getWorld().dropItem(getRandomLocation(getSelection().getMinimumPoint(), getSelection().getMaximumPoint()), getPlugin().getController().getRandomItem());
+        selection.getWorld().dropItem(getRandomLocation(selection.getMinimumPoint(), selection.getMaximumPoint()), getDropParty().getController().getRandomItem());
     }
 }

@@ -51,7 +51,7 @@ public class DropParty {
             }
         });
 
-        taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(controller.getPlugin(), new DropPartyTask(controller.getPlugin(), selection), 0, 20);
+        taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(controller.getPlugin(), new DropPartyTask(this), 0, 20);
 
         Bukkit.getScheduler().runTaskLater(controller.getPlugin(), () -> {
             Bukkit.getScheduler().cancelTask(taskId);

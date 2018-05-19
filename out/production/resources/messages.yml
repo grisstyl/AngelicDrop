@@ -1,0 +1,16 @@
+error:
+  no_permission: "&cYou don't have permission to do that!"
+  only_players: "&cOnly players can do that!"
+  make_selection: "&cYou need to make a WorldEdit selection (Hint: //wand)"
+
+command:
+  reloading: "&7AngelicDrop reloading..."
+  reloaded: "&aAngelicDrop reloaded!"
+  reload_failed: "&cCould not reload. Error has been logged."
+  usage:
+    - "&6Angelic&7Drop &8Command Usage"
+    - ""
+    - "  &r/ad start - Starts a drop party"
+    - "  &r/ad reload - Reloads the plugin"
+  party_started: "&e%player% &7has started a drop party at &e%location%"
+  party_ended: "&7Drop party has ended!"
